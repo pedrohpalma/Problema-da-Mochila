@@ -7,7 +7,8 @@ typedef struct item
     int peso;
 } ITEM;
 
-int **aloca_matriz(int linhas, int colunas) //alocacao da matriz com os itens
+// alocacao da matriz com os itens
+int **aloca_matriz(int linhas, int colunas)
 {
     int **m = (int **)malloc(linhas * sizeof(int *));
     if (!m)
@@ -26,31 +27,8 @@ int **aloca_matriz(int linhas, int colunas) //alocacao da matriz com os itens
     return m;
 }
 
-int main(void)
+int mochila(int n, int W, ITEM *itens, int **m)
 {
-    int n, W;
-    scanf("%d", &n);
-
-    ITEM *itens = (ITEM *)malloc(n * sizeof(ITEM));
-    if (itens == NULL)
-        return 0;
-
-    for (int i = 0; i < n; i++)
-    {
-        // leia: valor peso (consistent with other algorithms)
-        scanf("%d %d", &itens[i].valor, &itens[i].peso);
-    }
-    
-    scanf("%d", &W);
-
-    // aloca uma matriz n+1 por w+1, que corresponde aos possíveis pesos e considerando inclusões e exclusoes de itens(abordagem bottom up)
-    int **m = aloca_matriz(n + 1, W + 1); //elementos são todos alocados inicialmente como 0(calloc) para evitar colocar 0s desnecessários(primeira linha e primeira coluna)
-    if (m == NULL)
-    {
-        free(itens);
-        return 0;
-    }
-
     for (int i = 1; i <= n; i++)
     {
         int p = itens[i - 1].peso; //peso e valor do item da linha
@@ -66,36 +44,49 @@ int main(void)
             }
         }
     }
+    return m[n][W]; //melhor valor é sempre o do final da tabela(canto inferior direito)
+}
 
-    int melhor = m[n][W]; //melhor valor é sempre o do final da tabela(canto inferior direito)
-    printf("Valor: %d\n", melhor);
+int main(void)
+{
+    int n, W;
+    if (scanf("%d %d", &n, &W) != 2)
+        return 0;
+
+    ITEM *itens = (ITEM *)malloc(n * sizeof(ITEM));
+    if (itens == NULL)
+        return 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        // leia: peso valor
+        scanf("%d %d", &itens[i].peso, &itens[i].valor);
+    }
+
+    // aloca uma matriz n+1 por w+1, que corresponde aos possíveis pesos e considerando inclusões e exclusoes de itens(abordagem bottom up)
+    int **m = aloca_matriz(n + 1, W + 1); //elementos são todos alocados inicialmente como 0(calloc) para evitar colocar 0s desnecessários(primeira linha e primeira coluna)
+    if (m == NULL)
+    {
+        free(itens);
+        return 0;
+    }
+
+    int melhor = mochila(n, W, itens, m);
+    printf("Melhor valor: %d\n", melhor);
 
     //conferir quais itens foram pegos
-    printf("Itens: ");
-    int *selecionados = (int *)calloc(n, sizeof(int)); // Track selected items
+    printf("Itens escolhidos: ");
     int w = W;
     for (int i = n; i >= 1; i--)
     {
         if (m[i][w] != m[i - 1][w])
         {
-            //caso em que item i-1 foi pego
-            selecionados[i - 1] = 1;
+            //caso em que item i-1 foi pego(imprime ele)
+            printf("%d ", i);
             w -= itens[i - 1].peso;
-        }
-    }
-    
-    // Print selected items in correct order as letters
-    for (int i = 0; i < n; i++)
-    {
-        if (selecionados[i])
-        {
-            printf("%c ", (char)(i + 65)); // Convert to letters A, B, C...
-        }
+        }   
     }
     printf("\n");
-    
-    free(selecionados);
-
 
     //desalocação de memória
     for (int i = 0; i <= n; i++) 
