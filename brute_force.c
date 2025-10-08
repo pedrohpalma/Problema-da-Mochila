@@ -91,10 +91,10 @@ int main() {
     scanf("%d", &W);
 
     //chamada da função recursiva
-    int valor_otimo = brute_force(item, selecionados, n, W, 0, melhor_selecao, &melhor_valor);
+    brute_force(item, selecionados, n, W, 0, melhor_selecao, &melhor_valor);
 
     //impressão do melhor valor e dos itens como índices (item[0] = 0, item[1] = 1...)
-    printf("Valor: %d\n", valor_otimo);
+    printf("Valor: %d\n", melhor_valor);
     printf("Itens: ");
     for(int i = 0; i < n; i++) {
         if(melhor_selecao[i]) {
