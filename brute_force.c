@@ -98,7 +98,7 @@ int main() {
     printf("Itens: ");
     for(int i = 0; i < n; i++) {
         if(melhor_selecao[i]) {
-            printf("%d ", i); // Print the index directly
+            printf("%d ", i); //imprime o índice dos itens escolhidos
         }
     }
     printf("\n");
