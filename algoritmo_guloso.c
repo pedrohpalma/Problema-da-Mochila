@@ -30,11 +30,22 @@ int algoritmo_guloso(ITEM *itens, ITEM *selecionados, int n, int W, int cont) {
     for(int i = 0; i < n; i++) {
         //verifica se peso é válido
         if(itens[i].peso > 0) {
-            //casting para float
+            //casting do valor para float
             float razao = (float)itens[i].valor / itens[i].peso;
+        
             if(razao > melhor_razao) {
                 melhor_razao = razao;
                 indice_melhor = i;
+            }
+            //se as razões são iguais, escolhe o item com maior valor
+            else if(razao == melhor_razao && indice_melhor != -1) {
+                if(itens[i].valor > itens[indice_melhor].valor) {
+                    indice_melhor = i;
+                }
+                //se os valores também são iguais, escolhe o com menor peso
+                else if(itens[i].valor == itens[indice_melhor].valor && itens[i].peso < itens[indice_melhor].peso) {
+                    indice_melhor = i;
+                }
             }
         }
     }
@@ -59,7 +70,8 @@ int algoritmo_guloso(ITEM *itens, ITEM *selecionados, int n, int W, int cont) {
         return algoritmo_guloso(itens, selecionados, n - 1, W, cont + 1);
 
     } else {
-        //caso nenhum item tenha sido selecionado (tenham valor zero) nesta recursão ou o peso do item com a melhor razão somado aos itens selecionados 
+        //caso nenhum item tenha sido selecionado nesta recursão (tenham valor zero) 
+        //ou o peso do item com a melhor razão somado aos itens selecionados 
         //seja maior que a capacidade, encerra a seleção de itens e calcula o valor total
         int valor_total = 0;
         for(int i = 0; i < cont - 1; i++) {
@@ -89,14 +101,14 @@ int main() {
     }
 
     scanf("%d", &W);
-
-    //impressão do melhor valor e dos itens como letras maiúsculas (item[0] = A, item[1] = B...)
+    
+	//impressão do maior valor e dos itens selecionados por ordem de escolha
     printf("Valor: %d\n", algoritmo_guloso(itens, selecionados, n, W, 1));
     printf("Itens: ");
     for(int i = 0; i < n; i++) {
         if(selecionados[i].valor > 0) {
             //imprime os itens do vetor de selecionados com base nos índices originais, para assim mostrar a ordem pela qual os itens foram selecionados
-            printf("%c ", selecionados[i].indice_original + 65);
+            printf("%d ", selecionados[i].indice_original);
         }
     }
     printf("\n");

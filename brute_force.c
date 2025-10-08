@@ -28,8 +28,8 @@ int brute_force(ITEM *itens, ITEM *selecionados, int n, int W, int i, int *melho
             for(int j = 0; j < n; j++) {
                 //verifica se o valor dos itens selecionados são zero pois a cada recursão os itens não selecionados tem seu peso e valor zerados
                 if(selecionados[j].valor > 0) {
-                    //vetor da melhor solução recebe o índice do item (de acord com a ordem de entrada) e soma 65 para que sejam impressos como letras maiúsculas (ascii)
-                    melhor_selecao[j] = j + 65;
+                    //vetor da melhor solução recebe 1 para indicar que o item j foi selecionado
+                    melhor_selecao[j] = 1;
                 } else {
                     //caso o elemento não tenha sido selecionado o item não é adicionado ao vetor
                     melhor_selecao[j] = 0;
@@ -93,12 +93,12 @@ int main() {
     //chamada da função recursiva
     int valor_otimo = brute_force(item, selecionados, n, W, 0, melhor_selecao, &melhor_valor);
 
-    //impressão do melhor valor e dos itens como letras maiúsculas (item[0] = A, item[1] = B...)
+    //impressão do melhor valor e dos itens como índices (item[0] = 0, item[1] = 1...)
     printf("Valor: %d\n", valor_otimo);
     printf("Itens: ");
     for(int i = 0; i < n; i++) {
         if(melhor_selecao[i]) {
-            printf("%c ", melhor_selecao[i]);
+            printf("%d ", i); // Print the index directly
         }
     }
     printf("\n");
